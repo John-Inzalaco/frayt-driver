@@ -1,0 +1,13 @@
+apply from: '../node_modules/react-native-unimodules/gradle.groovy'
+include ':react-native-device-info'
+project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
+include ':@darron1217_react-native-background-geolocation-common'
+project(':@darron1217_react-native-background-geolocation-common').projectDir = new File(rootProject.projectDir, '../node_modules/@darron1217/react-native-background-geolocation/android/common')
+include ':react-native-background-fetch'
+project(':react-native-background-fetch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-fetch/android')
+includeUnimodulesProjects()
+
+rootProject.name = 'frayt'
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':app', ':react-native-code-push'
+project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')

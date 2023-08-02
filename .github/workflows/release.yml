@@ -1,0 +1,52 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Frayt Driver CI
+
+on:
+  push:
+    tags: codepush/*
+
+jobs:
+  deploy-ios-production:
+    name: Deploy iOS Production
+    # for release tags only
+    if: startsWith( github.ref, 'refs/tags/codepush/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v1.2
+        with:
+          envkey_GOOGLE_API_KEY: ${secrets.GOOGLE_API_KEY}
+          envkey_PRD_STRIPE_PUBLISH_KEY: ${{ secrets.PRD_STRIPE_PUBLISH_KEY }}
+          envkey_PRD_BASE_URL: 'https://api.frayt.com/api/internal/v2.1/'
+      - name: Install Dependencies
+        run: npm install
+      - name: Deploy to Codepush
+        uses: NishanthShankar/codepush-action@master
+        with:
+          args: release-react -a elijah-frayt.com/Frayt-Driver-IOS -d Production
+        env:
+          APPCENTER_ACCESS_TOKEN: ${{ secrets.APPCENTER_ACCESS_TOKEN_IOS }}
+  deploy-android-production:
+    name: Deploy Android Production
+    # for release tags only
+    if: startsWith( github.ref, 'refs/tags/codepush/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v1.2
+        with:
+          envkey_GOOGLE_API_KEY: ${secrets.GOOGLE_API_KEY}
+          envkey_PRD_STRIPE_PUBLISH_KEY: ${{ secrets.PRD_STRIPE_PUBLISH_KEY }}
+          envkey_PRD_BASE_URL: 'https://api.frayt.com/api/internal/v2.1/'
+      - name: Install Dependencies
+        run: npm install
+      - name: Deploy to Codepush
+        uses: NishanthShankar/codepush-action@master
+        with:
+          args: release-react -a elijah-frayt.com/Frayt-Driver-Android -d Production
+        env:
+          APPCENTER_ACCESS_TOKEN: ${{ secrets.APPCENTER_ACCESS_TOKEN_ANDROID }}
